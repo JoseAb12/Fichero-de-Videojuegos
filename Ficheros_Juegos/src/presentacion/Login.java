@@ -1,10 +1,21 @@
 package presentacion;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class Login {
     private String nombre, password;
     private static final String NOMBRE_ARCHIVO = "usuarios.dat";
-    private static List<Persona> usuarios = new ArrayList<>();
+    private static List<Login> usuarios = new ArrayList<>();
 
-    public Persona(String nombre, String password) {
+    public Login(String nombre, String password) {
         this.nombre = nombre;
         this.password = password;
     }
@@ -52,7 +63,7 @@ public class Login {
         String nombre = sc.nextLine();
         if (usuarios.stream().noneMatch(u -> u.getNombre().equals(nombre))) {
             System.out.print("Contraseña: ");
-            Persona nuevoUsuario = new Persona(nombre, sc.nextLine());
+            Login nuevoUsuario = new Login(nombre, sc.nextLine());
             usuarios.add(nuevoUsuario);
             guardarUsuario(nuevoUsuario);
             System.out.println("Usuario añadido.");
@@ -60,13 +71,13 @@ public class Login {
             System.out.println("El usuario ya existe.");
         }
     }
-    public static Persona fromLinea(String linea) {
+    public static Login fromLinea(String linea) {
         String[] datos = linea.split("/");
-        return new Persona(datos[0], datos[1]);
+        return new Login(datos[0], datos[1]);
     }
 
 
-    public static void guardarUsuario(Persona usuario) {
+    public static void guardarUsuario(Login usuario) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(NOMBRE_ARCHIVO, true))) {
             bw.write(usuario + "\n");
         } catch (IOException e) {
@@ -77,7 +88,7 @@ public class Login {
         File archivo = new File(NOMBRE_ARCHIVO);
         if (!archivo.exists()) archivo.createNewFile();
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
-            br.lines().map(Persona::fromLinea).forEach(usuarios::add);
+            br.lines().map(Login::fromLinea).forEach(usuarios::add);
         }
     }
 
