@@ -1,4 +1,4 @@
-package modelo.entidad;
+package presentacion;
 public class Login {
     private String nombre, password;
     private static final String NOMBRE_ARCHIVO = "usuarios.dat";
